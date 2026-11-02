@@ -1,1 +1,634 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Showcase Game Siswa RPL</title>
+  <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/lucide:gamepad-2.svg?color=%2306b6d4">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-card: rgba(30, 41, 59, 0.7);
+      --accent-cyan: #06b6d4;
+      --accent-purple: #a855f7;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --glass-border: rgba(255, 255, 255, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(168, 85, 247, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.15) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    header {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 2.5rem 1rem 1.5rem;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .hero-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #38bdf8, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.4rem;
+    }
+
+    .hero-subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-filter, .btn-nav {
+      padding: 10px 20px;
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      border-radius: 30px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-filter:hover, .btn-filter.active {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      border-color: transparent;
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+      color: #fff;
+    }
+
+    .btn-student {
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: none;
+      color: white;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-student:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 2.5rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.8rem;
+    }
+
+    .game-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .game-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .game-thumb {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background: #1e293b;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .card-body {
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      background: rgba(6, 182, 212, 0.15);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      color: #38bdf8;
+      font-size: 0.7rem;
+      font-weight: 700;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge.tradisional {
+      background: rgba(245, 158, 11, 0.15);
+      border-color: rgba(245, 158, 11, 0.3);
+      color: #fbbf24;
+    }
+
+    .game-card h3 {
+      font-size: 1.25rem;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .author {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .author strong {
+      color: #e2e8f0;
+    }
+
+    .desc {
+      font-size: 0.88rem;
+      color: #cbd5e1;
+      margin-bottom: 1.2rem;
+      flex-grow: 1;
+    }
+
+    .btn-play {
+      background: linear-gradient(135deg, #06b6d4, #3b82f6);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-play:hover {
+      filter: brightness(1.15);
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: #1e293b;
+      border: 1px solid var(--glass-border);
+      width: 92%;
+      max-width: 1000px;
+      height: 88vh;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-auth, .modal-submit {
+      max-width: 480px;
+      height: auto;
+      max-height: 90vh;
+      padding: 2rem;
+      text-align: left;
+      border-radius: 20px;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      padding: 1rem 1.5rem;
+      background: rgba(15, 23, 42, 0.9);
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .close-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .close-btn:hover {
+      background: #ef4444;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #fff;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+      font-weight: 600;
+    }
+
+    .auth-input, .form-control {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      color: white;
+      font-size: 0.95rem;
+    }
+
+    .auth-input:focus, .form-control:focus {
+      outline: none;
+      border-color: var(--accent-cyan);
+    }
+
+    select.form-control {
+      cursor: pointer;
+    }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .btn-auth-submit {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      border: none;
+      padding: 12px;
+      width: 100%;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-auth-submit:hover {
+      filter: brightness(1.1);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 class="hero-title">🎮 RPL GAME SHOWCASE</h1>
+    <p class="hero-subtitle">Galeri Karya & Proyek Game Siswa Rekayasa Perangkat Lunak</p>
+    
+    <nav>
+      <button class="btn-filter active" onclick="filterGames('Semua')">🕹️ Semua Game</button>
+      <button class="btn-filter" onclick="filterGames('Game Tradisional')">🏛️ Game Tradisional</button>
+      <button class="btn-filter" onclick="filterGames('Game Edukasi')">🧠 Game Edukasi</button>
+      <button class="btn-nav btn-student" onclick="openAuthModal()">🎓 Zona Siswa</button>
+    </nav>
+  </header>
+
+  <main>
+    <div id="gameContainer" class="game-grid">
+      <p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">Memuat daftar game...</p>
+    </div>
+  </main>
+
+  <!-- Modal Main Game -->
+  <div id="gameModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle" style="color: #fff;">Judul Game</h3>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+      </div>
+      <iframe id="gameFrame" src="" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <!-- Modal Verifikasi Password Zona Siswa -->
+  <div id="authModal" class="modal">
+    <div class="modal-content modal-auth">
+      <h2 style="color: #fff; margin-bottom: 0.5rem; text-align: center;">🎓 Masuk Zona Siswa</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; text-align: center; margin-bottom: 1rem;">Masukkan password yang diberikan guru untuk mengakses form pengumpulan game/aplikasi.</p>
+      
+      <input type="password" id="studentPassword" class="auth-input" placeholder="Masukkan Password..." onkeyup="if(event.key === 'Enter') verifyPassword()" style="text-align: center;">
+      
+      <div style="display: flex; gap: 10px; margin-top: 1rem;">
+        <button class="btn-auth-submit" onclick="verifyPassword()">Masuk</button>
+        <button class="btn-auth-submit" style="background: rgba(255,255,255,0.1);" onclick="closeAuthModal()">Batal</button>
+      </div>
+      <p id="authError" style="color: #ef4444; font-size: 0.85rem; margin-top: 10px; display: none; text-align: center;">Password salah! Silakan coba lagi.</p>
+    </div>
+  </div>
+
+  <!-- Modal Form Pengumpulan Aplikasi -->
+  <div id="submitModal" class="modal">
+    <div class="modal-content modal-submit">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.8rem;">
+        <h2 style="color: #fff; font-size: 1.3rem;">📝 Pengumpulan Game/Aplikasi</h2>
+        <button class="close-btn" onclick="closeSubmitModal()">&times;</button>
+      </div>
+      
+      <form id="submitGameForm" onsubmit="handleFormSubmit(event)">
+        <div class="form-group">
+          <label for="namaSiswa">Nama Siswa / Kelompok *</label>
+          <input type="text" id="namaSiswa" class="form-control" placeholder="Contoh: Budi Santoso" required>
+        </div>
+
+        <div class="form-group">
+          <label for="kelasSiswa">Kelas *</label>
+          <input type="text" id="kelasSiswa" class="form-control" placeholder="Contoh: XII RPL 1" required>
+        </div>
+
+        <div class="form-group">
+          <label for="judulGame">Judul Game / Aplikasi *</label>
+          <input type="text" id="judulGame" class="form-control" placeholder="Contoh: Petualangan Congklak" required>
+        </div>
+
+        <div class="form-group">
+          <label for="kategoriGame">Kategori *</label>
+          <select id="kategoriGame" class="form-control" required>
+            <option value="Game Tradisional">Game Tradisional</option>
+            <option value="Game Edukasi">Game Edukasi</option>
+            <option value="Lainnya">Lainnya</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="deskripsiGame">Deskripsi Singkat *</label>
+          <textarea id="deskripsiGame" class="form-control" placeholder="Jelaskan ringkas mengenai game atau cara memainkannya..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="gameZipFile">Upload File Project (.ZIP) *</label>
+          <input type="file" id="gameZipFile" class="form-control" accept=".zip" style="padding: 7px;" required>
+          <small style="color: var(--text-muted); font-size: 0.75rem;">Harus berisi file utama <strong>index.html</strong> beserta folder asetnya.</small>
+        </div>
+
+        <div class="form-group">
+          <label for="thumbFile">Upload Thumbnail / Cover Game (Opsional)</label>
+          <input type="file" id="thumbFile" class="form-control" accept="image/*" style="padding: 7px;">
+        </div>
+
+        <button type="submit" id="btnSubmitForm" class="btn-auth-submit" style="margin-top: 0.5rem;">🚀 Kirim Karya Sekarang</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "URL_WEB_APP_ANDA_DISINI"; // Ganti dengan URL deployment Web App GAS Anda
+    const PASSWORD_SISWA = "rpljuara";
+    const DEFAULT_THUMB = "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=600&auto=format&fit=crop"; 
+    let gameData = [];
+
+    document.addEventListener("DOMContentLoaded", loadGames);
+
+    async function loadGames() {
+      const container = document.getElementById("gameContainer");
+      try {
+        const response = await fetch(API_URL);
+        gameData = await response.json();
+        renderGames(gameData);
+      } catch (error) {
+        console.error("Error loading games:", error);
+        container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #ef4444;">Gagal memuat data game. Silakan periksa jaringan.</p>`;
+      }
+    }
+
+    function formatDriveUrl(url) {
+      if (!url || typeof url !== 'string' || !url.startsWith("http")) return DEFAULT_THUMB;
+      const match = url.match(/[-\w]{25,}/);
+      if (match && match[0]) {
+        return `https://lh3.googleusercontent.com/d/${match[0]}`;
+      }
+      return url;
+    }
+
+    function renderGames(data) {
+      const container = document.getElementById("gameContainer");
+      container.innerHTML = "";
+
+      if (!data || data.length === 0) {
+        container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">Belum ada game yang dikumpulkan dalam kategori ini.</p>`;
+        return;
+      }
+
+      data.forEach(item => {
+        const isTradisional = (item.Kategori || "").toLowerCase().includes("tradisional");
+        const badgeClass = isTradisional ? "badge tradisional" : "badge";
+        
+        const rawThumb = item["Thumbnail URL"] || item["thumbnailUrl"] || "";
+        const thumbUrl = formatDriveUrl(rawThumb);
+
+        const card = document.createElement("div");
+        card.className = "game-card";
+        card.innerHTML = `
+          <img src="${thumbUrl}" alt="${item["Judul Game"]}" class="game-thumb" onerror="this.onerror=null; this.src='${DEFAULT_THUMB}';">
+          <div class="card-body">
+            <div class="card-header">
+              <span class="${badgeClass}">${item.Kategori || "Game"}</span>
+            </div>
+            <h3>${item["Judul Game"] || "Tanpa Judul"}</h3>
+            <p class="author">Oleh: <strong>${item["Nama Siswa"] || "-"}</strong> (${item.Kelas || "-"})</p>
+            <p class="desc">${item.Deskripsi || "-"}</p>
+            <button class="btn-play" onclick="openGame('${item["Game URL"]}', '${item["Judul Game"]}')">
+              <span>▶</span> Mainkan Sekarang
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function filterGames(kategori) {
+      document.querySelectorAll(".btn-filter").forEach(btn => {
+        btn.classList.remove("active");
+        if (btn.innerText.includes(kategori) || (kategori === "Semua" && btn.innerText.includes("Semua"))) {
+          btn.classList.add("active");
+        }
+      });
+
+      if (kategori === "Semua") {
+        renderGames(gameData);
+      } else {
+        const filtered = gameData.filter(g => g.Kategori === kategori);
+        renderGames(filtered);
+      }
+    }
+
+    function openGame(url, title) {
+      document.getElementById("modalTitle").innerText = title;
+      document.getElementById("gameFrame").src = url;
+      document.getElementById("gameModal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("gameModal").style.display = "none";
+      document.getElementById("gameFrame").src = "";
+    }
+
+    function openAuthModal() {
+      if (sessionStorage.getItem("siswaAuthenticated") === "true") {
+        openSubmitModal();
+      } else {
+        document.getElementById("authModal").style.display = "flex";
+        document.getElementById("studentPassword").focus();
+      }
+    }
+
+    function closeAuthModal() {
+      document.getElementById("authModal").style.display = "none";
+      document.getElementById("authError").style.display = "none";
+      document.getElementById("studentPassword").value = "";
+    }
+
+    function verifyPassword() {
+      const inputPass = document.getElementById("studentPassword").value;
+      if (inputPass === PASSWORD_SISWA) {
+        sessionStorage.setItem("siswaAuthenticated", "true");
+        closeAuthModal();
+        openSubmitModal();
+      } else {
+        document.getElementById("authError").style.display = "block";
+      }
+    }
+
+    function openSubmitModal() {
+      document.getElementById("submitModal").style.display = "flex";
+    }
+
+    function closeSubmitModal() {
+      document.getElementById("submitModal").style.display = "none";
+    }
+
+    async function handleFormSubmit(event) {
+      event.preventDefault();
+      const submitBtn = document.getElementById("btnSubmitForm");
+      submitBtn.innerText = "Mengkompres & Mengirim...";
+      submitBtn.disabled = true;
+
+      const zipFileInput = document.getElementById("gameZipFile");
+      const thumbFileInput = document.getElementById("thumbFile");
+
+      if (!zipFileInput.files[0]) {
+        alert("Harap upload file ZIP game Anda!");
+        submitBtn.innerText = "🚀 Kirim Karya Sekarang";
+        submitBtn.disabled = false;
+        return;
+      }
+
+      const readFileAsBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve({ base64: reader.result, name: file.name, type: file.type });
+          reader.onerror = (error) => reject(error);
+          reader.readAsDataURL(file);
+        });
+      };
+
+      try {
+        let zipData = await readFileAsBase64(zipFileInput.files[0]);
+        let thumbData = thumbFileInput.files[0] ? await readFileAsBase64(thumbFileInput.files[0]) : null;
+
+        const payload = {
+          namaSiswa: document.getElementById("namaSiswa").value,
+          kelas: document.getElementById("kelasSiswa").value,
+          judulGame: document.getElementById("judulGame").value,
+          kategori: document.getElementById("kategoriGame").value,
+          deskripsi: document.getElementById("deskripsiGame").value,
+          zipBase64: zipData.base64,
+          zipName: zipData.name,
+          zipMimeType: zipData.type,
+          thumbBase64: thumbData ? thumbData.base64 : "",
+          thumbName: thumbData ? thumbData.name : "",
+          thumbMimeType: thumbData ? thumbData.type : ""
+        };
+
+        await fetch(API_URL, {
+          method: "POST",
+          body: JSON.stringify(payload)
+        });
+
+        alert("Berhasil mengumpulkan game dan mengekstrak project!");
+        document.getElementById("submitGameForm").reset();
+        closeSubmitModal();
+        loadGames();
+      } catch (error) {
+        console.error("Gagal mengirim data:", error);
+        alert("Gagal mengirim data! Ukuran file mungkin terlalu besar atau koneksi terputus.");
+      } finally {
+        submitBtn.innerText = "🚀 Kirim Karya Sekarang";
+        submitBtn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
