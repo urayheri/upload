@@ -428,9 +428,10 @@
         </div>
 
         <div class="form-group">
-          <label for="gameFiles">Upload Semua File Project (HTML, CSS, JS, Gambar) *</label>
-          <input type="file" id="gameFiles" class="form-control" multiple style="padding: 7px;" required>
-          <small style="color: var(--text-muted); font-size: 0.75rem;">Pilih semua file di dalam folder project Anda (pastikan ada <strong>index.html</strong>).</small>
+          <label for="gameFiles">Pilih Folder Project Game *</label>
+          <!-- Atribut webkitdirectory memungkinkan pemilihan satu folder utuh -->
+          <input type="file" id="gameFiles" class="form-control" webkitdirectory directory multiple style="padding: 7px;" required>
+          <small style="color: var(--text-muted); font-size: 0.75rem;">Klik, lalu pilih folder project game Anda (pastikan di dalamnya ada <strong>index.html</strong>).</small>
         </div>
 
         <div class="form-group">
@@ -572,14 +573,14 @@
     async function handleFormSubmit(event) {
       event.preventDefault();
       const submitBtn = document.getElementById("btnSubmitForm");
-      submitBtn.innerText = "Mengunggah File...";
+      submitBtn.innerText = "Mengunggah Folder...";
       submitBtn.disabled = true;
 
       const gameFilesInput = document.getElementById("gameFiles");
       const thumbFileInput = document.getElementById("thumbFile");
 
       if (!gameFilesInput.files || gameFilesInput.files.length === 0) {
-        alert("Harap pilih file project game Anda!");
+        alert("Harap pilih folder project game Anda!");
         submitBtn.innerText = "🚀 Kirim Karya Sekarang";
         submitBtn.disabled = false;
         return;
@@ -626,7 +627,7 @@
         loadGames();
       } catch (error) {
         console.error("Gagal mengirim data:", error);
-        alert("Gagal mengirim data! Total ukuran file mungkin terlalu besar.");
+        alert("Gagal mengirim data! Total ukuran folder mungkin terlalu besar.");
       } finally {
         submitBtn.innerText = "🚀 Kirim Karya Sekarang";
         submitBtn.disabled = false;
